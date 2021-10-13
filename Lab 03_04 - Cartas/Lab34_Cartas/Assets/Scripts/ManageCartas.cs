@@ -18,6 +18,7 @@ public class ManageCartas : MonoBehaviour
     int numTentativas = 0;                      // número de tentativas na rodada
     int numAcertos = 0;                         // número de match de pares acertados
     AudioSource somOK;                          // som de acerto
+    AudioSource myLittleBrownBookMP3;           // Coltrane eh top demais se eh louco cachorro
 
     int ultimoJogo = 0;
 
@@ -27,6 +28,8 @@ public class ManageCartas : MonoBehaviour
         MostraCartas();
         UpDateTentativas();
         somOK = GetComponent<AudioSource>();
+        myLittleBrownBookMP3 = GetComponent<AudioSource>();
+        myLittleBrownBookMP3.Play();
         ultimoJogo = PlayerPrefs.GetInt("Jogadas", 0);
         GameObject.Find("ultimaJogada").GetComponent<Text>().text = "Last score = " + ultimoJogo;
     }
@@ -54,7 +57,7 @@ public class ManageCartas : MonoBehaviour
                     if (numAcertos == 13)
                     {
                         PlayerPrefs.SetInt("Jogadas", numTentativas);
-                        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                        SceneManager.LoadScene("Fim");
                     }
                         
                 }
