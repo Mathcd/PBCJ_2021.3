@@ -20,8 +20,6 @@ public class ManageCartas : MonoBehaviour
     AudioSource somOK;                          // som de acerto
     AudioSource myLittleBrownBookMP3;           // Coltrane eh top demais se eh louco cachorro
 
-    int ultimoJogo = 0;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -30,8 +28,7 @@ public class ManageCartas : MonoBehaviour
         somOK = GetComponent<AudioSource>();
         myLittleBrownBookMP3 = GetComponent<AudioSource>();
         myLittleBrownBookMP3.Play();
-        ultimoJogo = PlayerPrefs.GetInt("Jogadas", 0);
-        GameObject.Find("ultimaJogada").GetComponent<Text>().text = "Last score = " + ultimoJogo;
+        GameObject.Find("ultimaJogada").GetComponent<Text>().text = "Last score = " + PlayerPrefs.GetInt("Jogadas");
     }
 
     // Update is called once per frame
@@ -56,8 +53,19 @@ public class ManageCartas : MonoBehaviour
 
                     if (numAcertos == 13)
                     {
+                        // ajusta a qtd de jogadas da partida que acabou de se encerrar
                         PlayerPrefs.SetInt("Jogadas", numTentativas);
-                        SceneManager.LoadScene("Fim");
+
+                        // verifica se bateu recorde
+                        if (PlayerPrefs.GetInt("Jogadas") < PlayerPrefs.GetInt("Recorde") || PlayerPrefs.GetInt("Recorde") == 0)
+                        {
+                            PlayerPrefs.SetInt("Recorde", PlayerPrefs.GetInt("Jogadas"));
+                            SceneManager.LoadScene("Recorde");
+                        }
+                        else
+                        {
+                            SceneManager.LoadScene("Fim");
+                        }                        
                     }
                         
                 }
