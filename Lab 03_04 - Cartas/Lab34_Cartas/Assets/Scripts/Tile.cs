@@ -10,19 +10,33 @@ public class Tile : MonoBehaviour
     public Sprite backCarta2;
     public int fundoAzulOuVermelho;
 
-    // Start is called before the first frame update
     void Start()
     {
+        /*
+        *
+        * ao criar um objeto dessa classe, esconda-o (eh uma carta)
+        *
+        */
         EscondeCarta();
     }
 
     public void OnMouseDown()
     {
+        /*
+        *
+        * Ao clicar numa carta, roda o metodo CartaSelecionada de ManageCartas
+        *
+        */
         GameObject.Find("gameManager").GetComponent<ManageCartas>().CartaSelecionada(gameObject);
     }
 
     public void EscondeCarta()
     {
+        /*
+        *
+        * quando for pra esconder a carta, precisa apenas verificar se o fundo deve ser vermelho ou azul
+        *
+        */
         if (fundoAzulOuVermelho == 0){
             GetComponent<SpriteRenderer>().sprite = backCarta;
         } else {
@@ -33,12 +47,22 @@ public class Tile : MonoBehaviour
 
     public void RevelaCarta()
     {
+        /*
+        *
+        * revela a carta na tela
+        *
+        */
         GetComponent<SpriteRenderer>().sprite = originalCarta;
         tileRevelada = true;
     }
 
     public void setCartaOriginal(Sprite novaCarta, int idFundo)
     {
+        /*
+        *
+        * seta a carta e seu fundo (vermelho ou azul)
+        *
+        */
         originalCarta = novaCarta;
         fundoAzulOuVermelho = idFundo;
     }

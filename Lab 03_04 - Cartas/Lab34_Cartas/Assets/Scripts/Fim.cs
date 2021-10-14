@@ -8,15 +8,24 @@ public class Fim : MonoBehaviour
 
     AudioSource somVitoria;
 
-    // Start is called before the first frame update
     void Start()
     {
+        /*
+        *
+        * ao iniciar, tocar a musica do fim
+        *
+        */
         somVitoria = GetComponent<AudioSource>();
         somVitoria.Play();
     }
 
     public void VoltarParaInicio()
     {
+        /*
+        *
+        * metodo onclick do botao para voltar para o inicio
+        *
+        */
         SceneManager.LoadScene("Inicio");
     }
 }

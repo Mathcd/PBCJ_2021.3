@@ -7,15 +7,24 @@ public class Recorde : MonoBehaviour
 {
     AudioSource ahlelek;
     
-    // Start is called before the first frame update
     void Start()
     {
+        /*
+        *
+        * ao iniciar a tela atrelada a essse scriot, toque a musica
+        *
+        */
         ahlelek = GetComponent<AudioSource>();
         ahlelek.Play();   
     }
 
     public void VoltarParaInicio()
     {
+        /*
+        *
+        * metodo onclick do botao para voltar para a tela inicial
+        *
+        */
         SceneManager.LoadScene("Inicio");
     }
 }

@@ -7,29 +7,39 @@ using UnityEngine.SceneManagement;
 
 public class ManageCartas : MonoBehaviour
 {
-    public GameObject carta;                    // A carta a ser descartada
     private bool primeiraCartaSelecionada, segundaCartaSelecionada, terceiraCartaSelecionada, quartaCartaSelecionada; // indicadores para cada carta escolhida em cada linha
-    private GameObject carta1, carta2, carta3, carta4; // gameObjects da 1ª e 2ª carta selecionada
-    private string linhaCarta1, linhaCarta2, linhaCarta3, linhaCarta4;    // linha da carta selecionada
-
-    bool timerPausado, timerAcionado;           // indicador de pausa no Timer ou Start Timer
-    float timer;                                // variável de tempo
-
-    int modoDeJogo = 0;                         // modo de jogo escolhido nas configuracoes
-    int numTentativas = 0;                      // número de tentativas na rodada
-    int numAcertos = 0;                         // número de match de pares acertados
-    AudioSource somOK;                          // som de acerto
-    AudioSource myLittleBrownBookMP3;           // Coltrane eh top demais se eh louco cachorro
+    private GameObject carta1, carta2, carta3, carta4; // gameObjects da 1a e 2a carta selecionada
+    private string linhaCarta1, linhaCarta2, linhaCarta3, linhaCarta4; // linha da carta selecionada
+    public GameObject carta; // A carta a ser descartada
+    public bool timerPausado, timerAcionado; // indicador de pausa no Timer ou Start Timer
+    public float timer; // variável de tempo
+    public int modoDeJogo = 0; // modo de jogo escolhido nas configuracoes
+    public int numTentativas = 0; // número de tentativas na rodada
+    public int numAcertos = 0; // número de match de pares acertados
+    public AudioSource somOK; // som de acerto
+    public AudioSource myLittleBrownBookMP3; // Coltrane eh top demais se eh louco cachorreira
 
     void Awake()
     {
+        /*
+        *
+        * quando a scene atrelada a esse script acordar, roda essa metodo 
+        * para colocar recorde e ultima partida nos objetos do jogo para que o usuario os veja 
+        *
+        */
         GameObject.Find("ultimaJogada").GetComponent<Text>().text = "Ultima partida: " + PlayerPrefs.GetInt("Jogadas");
         GameObject.Find("recordeText").GetComponent<Text>().text = "Recorde: " + PlayerPrefs.GetInt("Recorde");
     }
 
-    // Start is called before the first frame update
     void Start()
     {
+        /*
+        *
+        * ao iniciar, setar o modo de jogo escolhido nas configuracoes
+        * mostrar as cartas na tela, tocar a musica do jogo, e setar o som 
+        * de acerto. tambem coloca o numero de tentativas em 0 pq acabou de comecar
+        *
+        */
         modoDeJogo = PlayerPrefs.GetInt("ModoDeJogo");
         MostraCartas();
         UpDateTentativas();
@@ -38,9 +48,16 @@ public class ManageCartas : MonoBehaviour
         myLittleBrownBookMP3.Play();
     }
 
-    // Update is called once per frame
     void Update()
     {
+        /*
+        *
+        * toda vez que o timer for acionado, verifica se o usuario conseguiu 
+        * acertar, ou se ele errou. Dependendo do que for, pode esconder as cartas, ou destrui-las
+        * se o usuario tiver os 13 acertos requeridos, verifica se bateu o recorde e manda o usuario
+        * para a tela de recorde, ou senao, para a tela de fim
+        *
+        */
         if (timerAcionado)
         {
             timer += Time.deltaTime;
@@ -109,13 +126,19 @@ public class ManageCartas : MonoBehaviour
 
     void MostraCartas()
     {
+        /*
+        *
+        * funcao que roda no comeco para mostrar as cartas na tela
+        * ela cria um array de inteiros embaralhados (ids das cartas)
+        * e as coloca na tela de acordo com o modo de jogo escolhido nas configuracoes
+        * um array para cada linha
+        *
+        */
         int[] arrayEmbaralhado1 = criaArrayEmbaralhado();
         int[] arrayEmbaralhado2 = criaArrayEmbaralhado();
         int[] arrayEmbaralhado3 = criaArrayEmbaralhado();
         int[] arrayEmbaralhado4 = criaArrayEmbaralhado();
 
-        //Instantiate(carta, new Vector3(0, 0, 0), Quaternion.identity);
-        //AddUmaCarta();
         for (int i=0; i<13; i++)
         {
             switch (modoDeJogo)
@@ -158,21 +181,21 @@ public class ManageCartas : MonoBehaviour
 
     void AddUmaCarta(float linha, int rank, int valor, int idNaipe, int idFundo)
     {
+        /*
+        *
+        *
+        *
+        */
         GameObject centro = GameObject.Find("centroDaTela");
         float escalaCartaOriginal = carta.transform.localScale.x;
         float fatorEscalaX = (650 * escalaCartaOriginal) / 110.0f;
         float fatorEscalaY = (945 * escalaCartaOriginal) / 110.0f;
-
-        // Vector3 novaPosicao = new Vector3(centro.transform.position.x + ((rank - 13 / 2) * 1.5f), centro.transform.position.y, centro.transform.position.z);        
         Vector3 novaPosicao = new Vector3(centro.transform.position.x + ((rank - 13/2) * fatorEscalaX), centro.transform.position.y + ((linha - 2.0f/2.0f) * fatorEscalaY), centro.transform.position.z);
-
-        // GameObject c = (GameObject)(Instantiate(carta, new Vector3(rank*1.5f, 0, 0), Quaternion.identity));
         GameObject c = (GameObject)(Instantiate(carta, novaPosicao, Quaternion.identity));
-
-        c.tag = "" + (valor+1);
-        c.name = "" + linha + "_" + valor;
         string nomeDaCarta = "";
         string numeroCarta = "";
+        c.tag = "" + (valor+1);
+        c.name = "" + linha + "_" + valor;
 
         if (valor == 0)
             numeroCarta = "ace";
@@ -199,17 +222,22 @@ public class ManageCartas : MonoBehaviour
                 nomeDaCarta = numeroCarta + "_of_diamonds";
                 break;
         }
-                
 
         Sprite s1 = (Sprite)(Resources.Load<Sprite>(nomeDaCarta));
         print("S1: " + s1);
 
         GameObject.Find("" + linha + "_" + valor).GetComponent<Tile>().setCartaOriginal(s1, idFundo);
-
     }
 
     public int[] criaArrayEmbaralhado()
     {
+        /*
+        *
+        * metodo para criar um array de inteiros embaralhados
+        * vai servir para saber a ordem em que colocar as cartas em cada linha
+        * do jogo
+        *
+        */
         int[] novoArray = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
         int temp;
 
@@ -226,6 +254,15 @@ public class ManageCartas : MonoBehaviour
 
     public void CartaSelecionada(GameObject carta)
     {
+        /*
+        *
+        * metodo para manejar as cartas selecionadas pelo player conforme ele clica
+        * primeiro verifica se a primeira foi selecionada, depois a segunda, e assim por diante
+        * dependendo do modo de jogo escolhido nas configuracoes.
+        * somente quando o player clica em todas as cartas e finaliza uma jogada, verifica-se
+        * se ele acertou ou errou chamando o metodo VerificaCartas()
+        *
+        */
         if (modoDeJogo != 4){
             if (!primeiraCartaSelecionada)
             {
@@ -284,12 +321,19 @@ public class ManageCartas : MonoBehaviour
                 carta4.GetComponent<Tile>().RevelaCarta();
                 VerificaCartas();
             }
-        }
-            
+        }   
     }
 
     public void VerificaCartas()
     {
+        /*
+        *
+        * esse metodo eh chamado quando um player encerra sua jogada. O timer eh disparado 
+        * para que a funcao Update faca o que deve fazer. esse metodo tambem acrescenta
+        * uma jogada ao numero de tentativas e chama UpDateTentativas() para mostrar na tela
+        * a qtd de tentativas do usuario
+        *
+        */
         DisparaTimer();
         numTentativas++;
         UpDateTentativas();
@@ -297,17 +341,32 @@ public class ManageCartas : MonoBehaviour
 
     public void DisparaTimer()
     {
+        /*
+        *
+        * Dispara o timer para o metodo Update passar pelo seu primeiro if
+        *
+        */
         timerPausado = false;
         timerAcionado = true;
     }
 
-    void UpDateTentativas()
+    public void UpDateTentativas()
     {
+        /*
+        *
+        * mostra a quantidade de tentativas do usuario na tela
+        *
+        */
         GameObject.Find("numTentativas").GetComponent<Text>().text = "Tentativas: " + numTentativas;
     }
 
     public void VoltarParaInicio()
     {
+        /*
+        *
+        * metodo atrelado ao botao onclick para voltar a tela de inicio
+        *
+        */
         primeiraCartaSelecionada = false;
         segundaCartaSelecionada = false;
         terceiraCartaSelecionada = false;
