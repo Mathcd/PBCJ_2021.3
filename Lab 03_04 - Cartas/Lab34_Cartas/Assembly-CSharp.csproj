@@ -47,8 +47,12 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Inicio.cs" />
      <Compile Include="Assets\Scripts\ManageCartas.cs" />
+     <Compile Include="Assets\Scripts\Configuracoes.cs" />
      <Compile Include="Assets\Scripts\Tile.cs" />
+     <Compile Include="Assets\Scripts\Recorde.cs" />
+     <Compile Include="Assets\Scripts\Fim.cs" />
  <Reference Include="UnityEngine">
  <HintPath>/home/dimi/Unity/Hub/Editor/2020.3.19f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
  </Reference>
@@ -640,6 +644,9 @@
  <Reference Include="Unity.VisualStudio.Editor">
  <HintPath>/home/dimi/PBCJ_2021.3/Lab 03_04 - Cartas/Lab34_Cartas/Library/ScriptAssemblies/Unity.VisualStudio.Editor.dll</HintPath>
  </Reference>
+ <Reference Include="Unity.Sysroot.Linux_x86_64">
+ <HintPath>/home/dimi/PBCJ_2021.3/Lab 03_04 - Cartas/Lab34_Cartas/Library/ScriptAssemblies/Unity.Sysroot.Linux_x86_64.dll</HintPath>
+ </Reference>
  <Reference Include="Unity.Timeline">
  <HintPath>/home/dimi/PBCJ_2021.3/Lab 03_04 - Cartas/Lab34_Cartas/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
  </Reference>
@@ -658,8 +665,8 @@
  <Reference Include="Unity.2D.Path.Editor">
  <HintPath>/home/dimi/PBCJ_2021.3/Lab 03_04 - Cartas/Lab34_Cartas/Library/ScriptAssemblies/Unity.2D.Path.Editor.dll</HintPath>
  </Reference>
- <Reference Include="Unity.InternalAPIEditorBridge.001">
- <HintPath>/home/dimi/PBCJ_2021.3/Lab 03_04 - Cartas/Lab34_Cartas/Library/ScriptAssemblies/Unity.InternalAPIEditorBridge.001.dll</HintPath>
+ <Reference Include="Unity.Toolchain.Linux-x86_64">
+ <HintPath>/home/dimi/PBCJ_2021.3/Lab 03_04 - Cartas/Lab34_Cartas/Library/ScriptAssemblies/Unity.Toolchain.Linux-x86_64.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.UI">
  <HintPath>/home/dimi/PBCJ_2021.3/Lab 03_04 - Cartas/Lab34_Cartas/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
@@ -669,6 +676,9 @@
  </Reference>
  <Reference Include="Unity.Rider.Editor">
  <HintPath>/home/dimi/PBCJ_2021.3/Lab 03_04 - Cartas/Lab34_Cartas/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.InternalAPIEditorBridge.001">
+ <HintPath>/home/dimi/PBCJ_2021.3/Lab 03_04 - Cartas/Lab34_Cartas/Library/ScriptAssemblies/Unity.InternalAPIEditorBridge.001.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>/home/dimi/PBCJ_2021.3/Lab 03_04 - Cartas/Lab34_Cartas/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
@@ -705,6 +715,9 @@
  </Reference>
  <Reference Include="Unity.2D.SpriteShape.Runtime">
  <HintPath>/home/dimi/PBCJ_2021.3/Lab 03_04 - Cartas/Lab34_Cartas/Library/ScriptAssemblies/Unity.2D.SpriteShape.Runtime.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.SysrootPackage.Editor">
+ <HintPath>/home/dimi/PBCJ_2021.3/Lab 03_04 - Cartas/Lab34_Cartas/Library/ScriptAssemblies/Unity.SysrootPackage.Editor.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>

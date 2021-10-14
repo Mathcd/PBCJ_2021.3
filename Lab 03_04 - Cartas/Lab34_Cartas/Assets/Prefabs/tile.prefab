@@ -123,5 +123,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originalCarta: {fileID: 21300000, guid: 4c4f594d8d2822442845b2fa218b2e28, type: 3}
-  novaCarta: {fileID: 0}
   backCarta: {fileID: 21300000, guid: 63a7b252298138341aacf7742f181dce, type: 3}
+  backCarta2: {fileID: 21300000, guid: 1e8146c20d9a98e49b68240b72ca5b6c, type: 3}

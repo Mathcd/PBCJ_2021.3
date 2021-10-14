@@ -8,13 +8,14 @@ using UnityEngine.SceneManagement;
 public class ManageCartas : MonoBehaviour
 {
     public GameObject carta;                    // A carta a ser descartada
-    private bool primeiraCartaSelecionada, segundaCartaSelecionada;     // indicadores para cada carta escolhida em cada linha
-    private GameObject carta1, carta2;          // gameObjects da 1ª e 2ª carta selecionada
-    private string linhaCarta1, linhaCarta2;    // linha da carta selecionada
+    private bool primeiraCartaSelecionada, segundaCartaSelecionada, terceiraCartaSelecionada, quartaCartaSelecionada; // indicadores para cada carta escolhida em cada linha
+    private GameObject carta1, carta2, carta3, carta4; // gameObjects da 1ª e 2ª carta selecionada
+    private string linhaCarta1, linhaCarta2, linhaCarta3, linhaCarta4;    // linha da carta selecionada
 
     bool timerPausado, timerAcionado;           // indicador de pausa no Timer ou Start Timer
     float timer;                                // variável de tempo
 
+    int modoDeJogo = 0;                         // modo de jogo escolhido nas configuracoes
     int numTentativas = 0;                      // número de tentativas na rodada
     int numAcertos = 0;                         // número de match de pares acertados
     AudioSource somOK;                          // som de acerto
@@ -23,12 +24,13 @@ public class ManageCartas : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        modoDeJogo = PlayerPrefs.GetInt("ModoDeJogo");
         MostraCartas();
         UpDateTentativas();
         somOK = GetComponent<AudioSource>();
         myLittleBrownBookMP3 = GetComponent<AudioSource>();
         myLittleBrownBookMP3.Play();
-        GameObject.Find("ultimaJogada").GetComponent<Text>().text = "Last score = " + PlayerPrefs.GetInt("Jogadas");
+        GameObject.Find("ultimaJogada").GetComponent<Text>().text = "Ultima partida: " + PlayerPrefs.GetInt("Jogadas");
     }
 
     // Update is called once per frame
@@ -44,10 +46,16 @@ public class ManageCartas : MonoBehaviour
                 timerPausado = true;
                 timerAcionado = false;
 
-                if(carta1.tag == carta2.tag)
-                {
+                if(
+                    (modoDeJogo!=4 && carta1.tag==carta2.tag) || 
+                    (modoDeJogo==4 && carta1.tag==carta2.tag && carta2.tag==carta3.tag && carta3.tag==carta4.tag)
+                ){
                     Destroy(carta1);
                     Destroy(carta2);
+                    if (modoDeJogo==4){
+                        Destroy(carta3);
+                        Destroy(carta4);
+                    }                        
                     numAcertos++;
                     somOK.Play();
 
@@ -66,20 +74,29 @@ public class ManageCartas : MonoBehaviour
                         {
                             SceneManager.LoadScene("Fim");
                         }                        
-                    }
-                        
+                    }   
                 }
                 else
                 {
                     carta1.GetComponent<Tile>().EscondeCarta();
                     carta2.GetComponent<Tile>().EscondeCarta();
+                    if (modoDeJogo==4){
+                        carta3.GetComponent<Tile>().EscondeCarta();
+                        carta4.GetComponent<Tile>().EscondeCarta();
+                    }
                 }
                 primeiraCartaSelecionada = false;
                 segundaCartaSelecionada = false;
+                terceiraCartaSelecionada = false;
+                quartaCartaSelecionada = false;
                 carta1 = null;
                 carta2 = null;
+                carta3 = null;
+                carta4 = null;
                 linhaCarta1 = "";
                 linhaCarta2 = "";
+                linhaCarta3 = "";
+                linhaCarta4 = "";
                 timer = 0;
             }
         }
@@ -87,19 +104,54 @@ public class ManageCartas : MonoBehaviour
 
     void MostraCartas()
     {
-        int[] arrayEmbaralhado = criaArrayEmbaralhado();
+        int[] arrayEmbaralhado1 = criaArrayEmbaralhado();
         int[] arrayEmbaralhado2 = criaArrayEmbaralhado();
+        int[] arrayEmbaralhado3 = criaArrayEmbaralhado();
+        int[] arrayEmbaralhado4 = criaArrayEmbaralhado();
 
         //Instantiate(carta, new Vector3(0, 0, 0), Quaternion.identity);
         //AddUmaCarta();
         for (int i=0; i<13; i++)
         {
-            AddUmaCarta(0, i, arrayEmbaralhado[i]);
-            AddUmaCarta(1, i, arrayEmbaralhado2[i]);
+            switch (modoDeJogo)
+            {
+                // apenas naipes vermelhos
+                case 0:
+                    AddUmaCarta(0.0f, i, arrayEmbaralhado1[i], 1, 0);
+                    AddUmaCarta(1.0f, i, arrayEmbaralhado2[i], 3, 0);
+                    break;
+
+                // apenas naipes pretos
+                case 1:
+                    AddUmaCarta(0.0f, i, arrayEmbaralhado1[i], 0, 1);
+                    AddUmaCarta(1.0f, i, arrayEmbaralhado2[i], 2, 1);
+                    break;
+
+                // um naipe com traseiras iguais
+                case 2:
+                    AddUmaCarta(0.0f, i, arrayEmbaralhado1[i], 2, 0);
+                    AddUmaCarta(1.0f, i, arrayEmbaralhado2[i], 2, 0);
+                    break;
+
+                // um naipe com traseiras diferentes
+                case 3:
+                    AddUmaCarta(0.0f, i, arrayEmbaralhado1[i], 3, 0);
+                    AddUmaCarta(1.0f, i, arrayEmbaralhado2[i], 3, 1);
+                    break;
+
+                // quatro naipes com traseiras intercaladas
+                case 4:
+                    AddUmaCarta(-0.5f, i, arrayEmbaralhado1[i], 0, 0);
+                    AddUmaCarta(0.5f, i, arrayEmbaralhado2[i], 1, 1);
+                    AddUmaCarta(1.5f, i, arrayEmbaralhado3[i], 2, 0);
+                    AddUmaCarta(2.5f, i, arrayEmbaralhado4[i], 3, 1);
+                    break;
+                
+            }            
         }
     }
 
-    void AddUmaCarta(int linha, int rank, int valor)
+    void AddUmaCarta(float linha, int rank, int valor, int idNaipe, int idFundo)
     {
         GameObject centro = GameObject.Find("centroDaTela");
         float escalaCartaOriginal = carta.transform.localScale.x;
@@ -107,7 +159,7 @@ public class ManageCartas : MonoBehaviour
         float fatorEscalaY = (945 * escalaCartaOriginal) / 110.0f;
 
         // Vector3 novaPosicao = new Vector3(centro.transform.position.x + ((rank - 13 / 2) * 1.5f), centro.transform.position.y, centro.transform.position.z);        
-        Vector3 novaPosicao = new Vector3(centro.transform.position.x + ((rank - 13/2) * fatorEscalaX), centro.transform.position.y + ((linha - 2/2) * fatorEscalaY), centro.transform.position.z);
+        Vector3 novaPosicao = new Vector3(centro.transform.position.x + ((rank - 13/2) * fatorEscalaX), centro.transform.position.y + ((linha - 2.0f/2.0f) * fatorEscalaY), centro.transform.position.z);
 
         // GameObject c = (GameObject)(Instantiate(carta, new Vector3(rank*1.5f, 0, 0), Quaternion.identity));
         GameObject c = (GameObject)(Instantiate(carta, novaPosicao, Quaternion.identity));
@@ -127,12 +179,27 @@ public class ManageCartas : MonoBehaviour
             numeroCarta = "king";
         else
             numeroCarta = "" + (valor + 1);
-        nomeDaCarta = numeroCarta + "_of_clubs";
+
+        switch(idNaipe){
+            case 0:
+                nomeDaCarta = numeroCarta + "_of_clubs";
+                break;
+            case 1:
+                nomeDaCarta = numeroCarta + "_of_hearts";
+                break;
+            case 2:
+                nomeDaCarta = numeroCarta + "_of_spades";
+                break;
+            case 3:
+                nomeDaCarta = numeroCarta + "_of_diamonds";
+                break;
+        }
+                
 
         Sprite s1 = (Sprite)(Resources.Load<Sprite>(nomeDaCarta));
         print("S1: " + s1);
 
-        GameObject.Find("" + linha + "_" + valor).GetComponent<Tile>().setCartaOriginal(s1);
+        GameObject.Find("" + linha + "_" + valor).GetComponent<Tile>().setCartaOriginal(s1, idFundo);
 
     }
 
@@ -154,23 +221,66 @@ public class ManageCartas : MonoBehaviour
 
     public void CartaSelecionada(GameObject carta)
     {
-        if (!primeiraCartaSelecionada)
-        {
-            string linha = carta.name.Substring(0, 1);
-            linhaCarta1 = linha;
-            primeiraCartaSelecionada = true;
-            carta1 = carta;
-            carta1.GetComponent<Tile>().RevelaCarta();
+        if (modoDeJogo != 4){
+            if (!primeiraCartaSelecionada)
+            {
+                string linha = carta.name.Substring(0, 1);
+                linhaCarta1 = linha;
+                primeiraCartaSelecionada = true;
+                carta1 = carta;
+                carta1.GetComponent<Tile>().RevelaCarta();
+            }
+            else if(primeiraCartaSelecionada && !segundaCartaSelecionada)
+            {
+                string linha = carta.name.Substring(0, 1);
+                linhaCarta2 = linha;
+                segundaCartaSelecionada = true;
+                carta2 = carta;
+                carta2.GetComponent<Tile>().RevelaCarta();
+                VerificaCartas();
+            }
         }
-        else if(primeiraCartaSelecionada && !segundaCartaSelecionada)
+        else
         {
-            string linha = carta.name.Substring(0, 1);
-            linhaCarta2 = linha;
-            segundaCartaSelecionada = true;
-            carta2 = carta;
-            carta2.GetComponent<Tile>().RevelaCarta();
-            VerificaCartas();
+            if (!primeiraCartaSelecionada){
+                linhaCarta1 = carta.name.Substring(0, 1);
+                primeiraCartaSelecionada = true;
+                carta1 = carta;
+                carta1.GetComponent<Tile>().RevelaCarta();
+            } 
+            else if (
+                primeiraCartaSelecionada &&
+                !segundaCartaSelecionada
+            ){
+                linhaCarta2 = carta.name.Substring(0, 1);
+                segundaCartaSelecionada = true;
+                carta2 = carta;
+                carta2.GetComponent<Tile>().RevelaCarta();
+            }
+            else if (
+                primeiraCartaSelecionada &&
+                segundaCartaSelecionada &&
+                !terceiraCartaSelecionada
+            ){
+                linhaCarta3 = carta.name.Substring(0, 1);
+                terceiraCartaSelecionada = true;
+                carta3 = carta;
+                carta3.GetComponent<Tile>().RevelaCarta();
+            }
+            else if (
+                primeiraCartaSelecionada &&
+                segundaCartaSelecionada &&
+                terceiraCartaSelecionada &&
+                !quartaCartaSelecionada
+            ){
+                linhaCarta4 = carta.name.Substring(0, 1);
+                quartaCartaSelecionada = true;
+                carta4 = carta;
+                carta4.GetComponent<Tile>().RevelaCarta();
+                VerificaCartas();
+            }
         }
+            
     }
 
     public void VerificaCartas()
@@ -188,6 +298,6 @@ public class ManageCartas : MonoBehaviour
 
     void UpDateTentativas()
     {
-        GameObject.Find("numTentativas").GetComponent<Text>().text = "Attempts = " + numTentativas;
+        GameObject.Find("numTentativas").GetComponent<Text>().text = "Tentativas: " + numTentativas;
     }
 }
