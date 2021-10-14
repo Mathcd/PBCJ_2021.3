@@ -16,26 +16,9 @@ public class Tile : MonoBehaviour
         EscondeCarta();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void OnMouseDown()
     {
-        print("Vou pressionou num Tile");
-        /*if (tileRevelada)
-        {
-            EscondeCarta();
-        }
-        else
-        {
-            RevelaCarta();
-        }*/                     // aqui não se guardava número de cartas
-
         GameObject.Find("gameManager").GetComponent<ManageCartas>().CartaSelecionada(gameObject);
-
     }
 
     public void EscondeCarta()
@@ -59,6 +42,5 @@ public class Tile : MonoBehaviour
         originalCarta = novaCarta;
         fundoAzulOuVermelho = idFundo;
     }
-
 
 }

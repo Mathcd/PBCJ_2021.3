@@ -15,12 +15,6 @@ public class Fim : MonoBehaviour
         somVitoria.Play();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void VoltarParaInicio()
     {
         SceneManager.LoadScene("Inicio");

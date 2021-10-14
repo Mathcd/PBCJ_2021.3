@@ -21,6 +21,12 @@ public class ManageCartas : MonoBehaviour
     AudioSource somOK;                          // som de acerto
     AudioSource myLittleBrownBookMP3;           // Coltrane eh top demais se eh louco cachorro
 
+    void Awake()
+    {
+        GameObject.Find("ultimaJogada").GetComponent<Text>().text = "Ultima partida: " + PlayerPrefs.GetInt("Jogadas");
+        GameObject.Find("recordeText").GetComponent<Text>().text = "Recorde: " + PlayerPrefs.GetInt("Recorde");
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,7 +36,6 @@ public class ManageCartas : MonoBehaviour
         somOK = GetComponent<AudioSource>();
         myLittleBrownBookMP3 = GetComponent<AudioSource>();
         myLittleBrownBookMP3.Play();
-        GameObject.Find("ultimaJogada").GetComponent<Text>().text = "Ultima partida: " + PlayerPrefs.GetInt("Jogadas");
     }
 
     // Update is called once per frame
@@ -299,5 +304,25 @@ public class ManageCartas : MonoBehaviour
     void UpDateTentativas()
     {
         GameObject.Find("numTentativas").GetComponent<Text>().text = "Tentativas: " + numTentativas;
+    }
+
+    public void VoltarParaInicio()
+    {
+        primeiraCartaSelecionada = false;
+        segundaCartaSelecionada = false;
+        terceiraCartaSelecionada = false;
+        quartaCartaSelecionada = false;
+        carta1 = null;
+        carta2 = null;
+        carta3 = null;
+        carta4 = null;
+        linhaCarta1 = "";
+        linhaCarta2 = "";
+        linhaCarta3 = "";
+        linhaCarta4 = "";
+        timer = 0;
+        numTentativas = 0;
+        numAcertos = 0;
+        SceneManager.LoadScene("Inicio");
     }
 }

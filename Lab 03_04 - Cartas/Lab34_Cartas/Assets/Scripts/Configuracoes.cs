@@ -16,15 +16,18 @@ public class Configuracoes : MonoBehaviour
         inicio.Play();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
     public void SalvarEVoltarParaInicio()
     {
         int modoDeJogo = GameObject.Find("Dropdown").GetComponent<Dropdown>().value;
         PlayerPrefs.SetInt("ModoDeJogo", modoDeJogo);
         SceneManager.LoadScene("Inicio");
+    }
+
+    public void ResetarPreferencias()
+    {
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.SetInt("Recorde", 0);
+        PlayerPrefs.SetInt("Jogadas", 0);
+        PlayerPrefs.SetInt("ModoDeJogo", 0);
     }
 }

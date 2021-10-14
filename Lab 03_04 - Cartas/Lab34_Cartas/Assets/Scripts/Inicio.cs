@@ -9,21 +9,30 @@ public class Inicio : MonoBehaviour
 
     AudioSource inicio;
 
+    void Awake()
+    {
+        VerificarRecordeEUltimaPartida()
+        GameObject.Find("recordeText").GetComponent<Text>().text = "Recorde de tentativas: " + PlayerPrefs.GetInt("Recorde");
+        GameObject.Find("ultimaPartidaText").GetComponent<Text>().text = "Ultima partida: " + PlayerPrefs.GetInt("Jogadas");
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         inicio = GetComponent<AudioSource>();
         inicio.Play();
-        PlayerPrefs.DeleteAll();
-        PlayerPrefs.SetInt("Recorde", 0);
-        PlayerPrefs.SetInt("Jogadas", 0);
-        GameObject.Find("recordeText").GetComponent<Text>().text = "Recorde de tentativas: " + PlayerPrefs.GetInt("Recorde");   
     }
 
-    // Update is called once per frame
-    void Update()
+    public VerificarRecordeEUltimaPartida()
     {
-        GameObject.Find("recordeText").GetComponent<Text>().text = "Recorde de tentativas: " + PlayerPrefs.GetInt("Recorde");
+        if(!PlayerPrefs.HasKey("Recorde"))
+        {
+            PlayerPrefs.SetInt("Recorde", 0);
+        }
+        if(!PlayerPrefs.HasKey("Jogadas"))
+        {
+            PlayerPrefs.SetInt("Jogadas", 0);
+        }
     }
 
     public void StartMundoGame()
