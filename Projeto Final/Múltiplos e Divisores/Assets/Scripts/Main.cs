@@ -9,18 +9,54 @@ public class Main : MonoBehaviour
 
     public ManageCartas manageCartasScript; // cria objeto manageCartasScript da classe ManageCartas
 
+    // Criando um baralho para a máquina 1
+    Maquina maquina1;
+    Jogador jogador1;
+    PilhaCompra pilha;
+    Carta cartaAnterior;
+    //maquina1.printarBaralho("máquina 1");
+
+    int indexCarta;
+    int rodadas = 0;
+    bool vezDoJogador = false;
+
+
     // Start is called before the first frame update
     void Start()
     {
         
-        int rodadas;
-        for(int i=0; i<1; i++)
-        {
-            rodadas = jogoCompleto(500);
-            Debug.Log("JOGO FINALIZADO EM: " + rodadas + " RODADAS");
-        }
-        
+        // Criando um baralho para a pilha de compra
+        pilha = new PilhaCompra();
+        pilha.printarBaralho("pilha");
 
+        // Criando um baralho para a máquina 1
+        maquina1 = new Maquina();
+        maquina1.printarBaralho("máquina 1");
+
+        // Criando um baralho para a máquina 2
+        jogador1 = new Jogador();
+        jogador1.printarBaralho("jogador 1");
+
+        // renderiza pilha de compra
+        manageCartasScript.MostraPilhaCompra();
+
+        // chamamos a carta que está no topo da pilha de compra para iniciar o jogo e renderizamos ela
+        cartaAnterior = pilha.comprarCarta();
+        manageCartasScript.MostraPilhaDescarte(cartaAnterior.getTipo(), cartaAnterior.getValor());
+
+
+        // inicializa os objetos das cartas do jogador e máquina
+        RenderizaTodasCartas(jogador1);
+        RenderizaTodasCartas(maquina1);
+
+        // atualiza os objetos com as cartas corretas da mão do jogador e máquina e espaços vazios
+        AtualizaTodasCartas(jogador1);
+        AtualizaTodasCartas(maquina1);
+
+
+
+        // Definindo a carta que vai comecar o jogo
+        //Carta cartaAnterior = cartaInicial;
 
 
     }
@@ -30,7 +66,74 @@ public class Main : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (vezDoJogador)
+        {
+            int abc = 1;
+        }
+        else
+        {
+            // Maquina 1 verifica se tem alguma carta compativel em seu baralho
+            // se nao tiver, entao compra uma carta da pilha de compra
+            // e verifica se consegue jogar com a carta comprada, senao passa a vez
+            Debug.Log("Máquina 1 iniciando sua jogada");
 
+            // Procuro uma carta compativel
+            indexCarta = maquina1.procurarCartaCompativel(cartaAnterior);
+
+            // Se encontrou uma carta...
+            if (indexCarta >= 0)
+            {
+                maquina1.printarBaralho("maquina 1 antes do destroy");
+                //DestroiTodasCartas(maquina1);
+                maquina1.printarBaralho("maquina 1 depois do destroy");
+
+                // Aqui achamos uma carta no baralho, vou jogar a carta encontrada
+                // e definir que agr a carta anterior eh a carta encontrada
+                Debug.Log("Máquina 1 encontrou carta no index " + indexCarta);
+                cartaAnterior = maquina1.getCartaAt(indexCarta);
+                maquina1.jogarCarta(indexCarta);
+
+
+                /* ISSO DEVE SER APAGADO !!!!!!!!
+                print("Qtd cartas antes do Destroy: " + maquina1.getQtdCartas());
+                maquina1.printarBaralho("maquina 1 antes do render");
+                RenderizaTodasCartas(maquina1);
+                maquina1.printarBaralho("maquina 1 depois do render");
+                DestroiTodasCartas(maquina1);
+                RenderizaTodasCartas(maquina1);
+                */
+
+                // atualizando cartas após alteração na mão
+                AtualizaTodasCartas(maquina1);
+            }
+
+            // Se nao encontrou, compra
+            else
+            {
+
+
+                Debug.Log("Máquina 1 não encontrou carta compatível e comprará uma carta da pilha.");
+                novaCarta = pilha.comprarCarta();
+                maquina1.adicionarCartaComprada(novaCarta);
+
+
+                // Depois de comprar, verifica se consegue jogar, senao passa a vez
+                indexCarta = maquina1.procurarCartaCompativel(cartaAnterior);
+                if (indexCarta >= 0)
+                {
+                    // Aqui achamos uma carta no baralho, vou jogar a carta encontrada
+                    // e definir que agr a carta anterior eh a carta encontrada
+                    Debug.Log("Máquina 1 encontrou carta no index " + indexCarta);
+                    cartaAnterior = maquina1.getCartaAt(indexCarta);
+                    maquina1.jogarCarta(indexCarta);
+                }
+
+                // atualizando cartas após alteração na mão
+                AtualizaTodasCartas(maquina1);
+
+
+            }
+        }
     }
 
     /* chama método responsável por instanciar cada uma das cartas do jogador */
@@ -100,28 +203,12 @@ public class Main : MonoBehaviour
         }
     }
 
-    // ESSA FUNÇÃO PROVAVELMENTE SERÁ EXCLUÍDA
-    public void DestroiTodasCartas(Jogador jogador1)
-    {
-        int qtdCartas = jogador1.getQtdCartas();
-        for (int i = 0; i < qtdCartas; i++)
-        {
-            Destroy(GameObject.Find("Carta_J_" + i));
-        }
-    }
-    // ESSA FUNÇÃO PROVAVELMENTE SERÁ EXCLUÍDA
-    public void DestroiTodasCartas(Maquina maquina1)
-    {
-        int qtdCartas = maquina1.getQtdCartas();
-        for (int i = 0; i < qtdCartas; i++)
-        {
-            Destroy(GameObject.Find("Carta_M_" + i));
-        }
-    }
-
+   
 
     public int jogoCompleto(int qtdMaxRodadas)
     {
+        /*
+         
         // Variaveis 
         int indexCarta, rodadas=0;
         Carta novaCarta;
@@ -138,12 +225,10 @@ public class Main : MonoBehaviour
         Jogador jogador1= new Jogador();
         jogador1.printarBaralho("jogador 1");
 
-        //////ManageCartas mngCartas = new ManageCartas();
-        ///////mngCartas.MostraCartas('J', 0, 'A', 2);
-
+        // renderiza pilha de compra
         manageCartasScript.MostraPilhaCompra();
 
-        // chamamos a carta que está no topo da pilha de compra para iniciar o jogo e renderizamos
+        // chamamos a carta que está no topo da pilha de compra para iniciar o jogo e renderizamos ela
         Carta cartaInicial = pilha.comprarCarta();
         manageCartasScript.MostraPilhaDescarte(cartaInicial.getTipo(), cartaInicial.getValor());
 
@@ -151,10 +236,6 @@ public class Main : MonoBehaviour
         // inicializa os objetos das cartas do jogador e máquina
         RenderizaTodasCartas(jogador1);
         RenderizaTodasCartas(maquina1);
-
-        /* APENAS PARA TESTE   >>>>>>>>>>>  DEVE SER EXCLUÍDO  */
-        //Sprite s1 = (Sprite)(Resources.Load<Sprite>("A-2"));
-        //GameObject.Find("Carta_" + "M" + "_" + "4").GetComponent<Tile>().setCartaOriginal(s1);
 
         // atualiza os objetos com as cartas corretas da mão do jogador e máquina e espaços vazios
         AtualizaTodasCartas(jogador1);
@@ -165,7 +246,9 @@ public class Main : MonoBehaviour
         // Definindo a carta que vai comecar o jogo
         Carta cartaAnterior = cartaInicial;
 
-        // Rodadas do jogo
+        // Rodadas do jogo  
+        
+         */
         do
         {
             rodadas++;

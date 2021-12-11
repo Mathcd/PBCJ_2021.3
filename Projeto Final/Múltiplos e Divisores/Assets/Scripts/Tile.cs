@@ -27,12 +27,14 @@ public class Tile : MonoBehaviour
         Debug.Log("Você clicou no objeto " + this.gameObject.name);
         //Debug.Log(this.gameObject.name);
 
-        /*
+        
         string clicked_obj = this.gameObject.name;
+
 
         // processa o click no objeto
         var tokens = clicked_obj.Split('_');
 
+        /*
         // se o clique foi na pilha de compra, retorna -1
         bool compra = clicked_obj.Equals("Carta_TopoPilhaCompra");
         if (compra) {
@@ -42,6 +44,7 @@ public class Tile : MonoBehaviour
         else if (tokens[1] == "J") {
             Globals.MOUSE_CLICK = int.Parse(tokens[2]);
         }
+
 
         //Globals.EM_ESPERA = false;
         /*
