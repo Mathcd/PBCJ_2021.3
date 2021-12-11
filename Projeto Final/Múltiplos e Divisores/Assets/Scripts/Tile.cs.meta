@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 29e80179790313e41b04d15e30e457f5
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - originalCarta: {fileID: 21300000, guid: 552ef6e0f8879204aa112e3247607790, type: 3}
+  - backCarta: {fileID: 21300000, guid: 6ee17acad3655774aa3d7edc0e681612, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
