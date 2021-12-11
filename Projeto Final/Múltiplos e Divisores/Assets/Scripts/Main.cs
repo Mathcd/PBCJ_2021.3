@@ -18,13 +18,33 @@ public class Main : MonoBehaviour
 
     int indexCarta;
     int rodadas = 0;
-    bool vezDoJogador = false;
+    bool vezDoJogador = true;
+
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        // criando variáveis para cada uma das cartas do jogador
+        PlayerPrefs.SetInt("carta0jogador", -1);
+        PlayerPrefs.SetInt("carta1jogador", -1);
+        PlayerPrefs.SetInt("carta2jogador", -1);
+        PlayerPrefs.SetInt("carta3jogador", -1);
+        PlayerPrefs.SetInt("carta4jogador", -1);
+        PlayerPrefs.SetInt("carta5jogador", -1);
+        PlayerPrefs.SetInt("carta6jogador", -1);
+        PlayerPrefs.SetInt("carta7jogador", -1);
+        PlayerPrefs.SetInt("carta8jogador", -1);
+        PlayerPrefs.SetInt("carta9jogador", -1);
+        PlayerPrefs.SetInt("carta10jogador", -1);
+        PlayerPrefs.SetInt("carta11jogador", -1);
+        PlayerPrefs.SetInt("carta12jogador", -1);
+        PlayerPrefs.SetInt("carta13jogador", -1);
+        PlayerPrefs.SetInt("carta14jogador", -1);
+
+        // flag da vez do jogador; se 0 : não é a vez, se 1 : não é a vez
+        PlayerPrefs.SetInt("vezDoJogador", 0);
+
         // Criando um baralho para a pilha de compra
         pilha = new PilhaCompra();
         pilha.printarBaralho("pilha");
@@ -43,6 +63,8 @@ public class Main : MonoBehaviour
         // chamamos a carta que está no topo da pilha de compra para iniciar o jogo e renderizamos ela
         cartaAnterior = pilha.comprarCarta();
         manageCartasScript.MostraPilhaDescarte(cartaAnterior.getTipo(), cartaAnterior.getValor());
+        PlayerPrefs.SetInt("cartaAnteriorValorPP", cartaAnterior.getValor());
+        PlayerPrefs.SetString("cartaAnteriorTipoPP", cartaAnterior.getTipo().ToString());
 
 
         // inicializa os objetos das cartas do jogador e máquina
@@ -63,7 +85,7 @@ public class Main : MonoBehaviour
 
 
 
-    // Update is called once per frame
+        // Update is called once per frame
     void Update()
     {
         if (vezDoJogador)
@@ -83,9 +105,9 @@ public class Main : MonoBehaviour
             // Se encontrou uma carta...
             if (indexCarta >= 0)
             {
-                maquina1.printarBaralho("maquina 1 antes do destroy");
+                //maquina1.printarBaralho("maquina 1 antes do destroy");
                 //DestroiTodasCartas(maquina1);
-                maquina1.printarBaralho("maquina 1 depois do destroy");
+                //maquina1.printarBaralho("maquina 1 depois do destroy");
 
                 // Aqui achamos uma carta no baralho, vou jogar a carta encontrada
                 // e definir que agr a carta anterior eh a carta encontrada
@@ -94,17 +116,14 @@ public class Main : MonoBehaviour
                 maquina1.jogarCarta(indexCarta);
 
 
-                /* ISSO DEVE SER APAGADO !!!!!!!!
-                print("Qtd cartas antes do Destroy: " + maquina1.getQtdCartas());
-                maquina1.printarBaralho("maquina 1 antes do render");
-                RenderizaTodasCartas(maquina1);
-                maquina1.printarBaralho("maquina 1 depois do render");
-                DestroiTodasCartas(maquina1);
-                RenderizaTodasCartas(maquina1);
-                */
-
                 // atualizando cartas após alteração na mão
                 AtualizaTodasCartas(maquina1);
+
+                // atualizamos a pilha de descarte com a carta jogada
+                manageCartasScript.MostraPilhaDescarte(cartaAnterior.getTipo(), cartaAnterior.getValor());
+
+                Debug.Log("E assim ficou o baralho da maquina:");
+                maquina1.printarBaralho("máquina 1");
             }
 
             // Se nao encontrou, compra
@@ -113,7 +132,7 @@ public class Main : MonoBehaviour
 
 
                 Debug.Log("Máquina 1 não encontrou carta compatível e comprará uma carta da pilha.");
-                novaCarta = pilha.comprarCarta();
+                Carta novaCarta = pilha.comprarCarta();
                 maquina1.adicionarCartaComprada(novaCarta);
 
 
@@ -126,13 +145,20 @@ public class Main : MonoBehaviour
                     Debug.Log("Máquina 1 encontrou carta no index " + indexCarta);
                     cartaAnterior = maquina1.getCartaAt(indexCarta);
                     maquina1.jogarCarta(indexCarta);
+
+                    // atualizamos a pilha de descarte com a carta jogada
+                    manageCartasScript.MostraPilhaDescarte(cartaAnterior.getTipo(), cartaAnterior.getValor());
                 }
 
                 // atualizando cartas após alteração na mão
                 AtualizaTodasCartas(maquina1);
 
-
+                Debug.Log("E assim ficou o baralho da maquina:");
+                maquina1.printarBaralho("máquina 1");
             }
+            AtualizaTodasCartas(maquina1);
+            vezDoJogador = true;
+
         }
     }
 
@@ -170,12 +196,14 @@ public class Main : MonoBehaviour
 
             Sprite s1 = (Sprite)(Resources.Load<Sprite>(nomeCartaAtual));
             GameObject.Find("Carta_" + "J" + "_" + i).GetComponent<Tile>().setCartaOriginal(s1);
+            PlayerPrefs.SetInt("carta"+i+"jogador", cartaAtual.getValor());
         }
         // preenche as posições vazias com a carta "blank"
         for (int i = qtdCartas; i < 15; i++)
         {
             Sprite s1 = (Sprite)(Resources.Load<Sprite>("blank"));
             GameObject.Find("Carta_" + "J" + "_" + i).GetComponent<Tile>().setCartaOriginal(s1);
+            PlayerPrefs.SetInt("carta" + i + "jogador", -1);
         }
     }
 
@@ -248,7 +276,7 @@ public class Main : MonoBehaviour
 
         // Rodadas do jogo  
         
-         */
+         
         do
         {
             rodadas++;
@@ -282,7 +310,7 @@ public class Main : MonoBehaviour
                 maquina1.printarBaralho("maquina 1 depois do render");
                 DestroiTodasCartas(maquina1);
                 RenderizaTodasCartas(maquina1);
-                */
+                
 
                 // atualizando cartas após alteração na mão
                 AtualizaTodasCartas(maquina1);
@@ -320,54 +348,58 @@ public class Main : MonoBehaviour
             maquina1.printarBaralho("máquina 1");
 
             break;
+                */
 
-            
-            // Mesma coisa pra máquina 2
-            Debug.Log("Jogador 1 iniciando sua jogada");
+                // Mesma coisa pra máquina 2
+                //Debug.Log("Jogador 1 iniciando sua jogada");
 
-           
 
-            /*
-            indexCarta = jogador1.procurarCartaCompativel(cartaAnterior);
+
+        /*
+        indexCarta = jogador1.procurarCartaCompativel(cartaAnterior);
+        if (indexCarta >= 0)
+        {
+            Debug.Log("Máquina 2 encontrou carta no index " + indexCarta);
+            cartaAnterior = maquina2.getCartaAt(indexCarta);
+            maquina2.jogarCarta(indexCarta);
+        }
+        else
+        {
+            Debug.Log("Máquina 2 não encontrou carta compatível e comprará uma carta da pilha.");
+            novaCarta = pilha.comprarCarta();
+            maquina2.adicionarCartaComprada(novaCarta);
+            indexCarta = maquina2.procurarCartaCompativel(cartaAnterior);
             if (indexCarta >= 0)
             {
                 Debug.Log("Máquina 2 encontrou carta no index " + indexCarta);
                 cartaAnterior = maquina2.getCartaAt(indexCarta);
                 maquina2.jogarCarta(indexCarta);
             }
-            else
-            {
-                Debug.Log("Máquina 2 não encontrou carta compatível e comprará uma carta da pilha.");
-                novaCarta = pilha.comprarCarta();
-                maquina2.adicionarCartaComprada(novaCarta);
-                indexCarta = maquina2.procurarCartaCompativel(cartaAnterior);
-                if (indexCarta >= 0)
-                {
-                    Debug.Log("Máquina 2 encontrou carta no index " + indexCarta);
-                    cartaAnterior = maquina2.getCartaAt(indexCarta);
-                    maquina2.jogarCarta(indexCarta);
-                }
-            }
-            Debug.Log("Máquina 2 finalizou sua jogada");
-            maquina2.printarBaralho("máquina 2");
-
-            */
-
-        } while (maquina1.getQtdCartas() > 0 & jogador1.getQtdCartas() > 0 & rodadas < qtdMaxRodadas);
-
-        if (maquina1.getQtdCartas() == 0 )
-        {
-            Debug.Log("MÁQUINA 1 VENCEU O JOGO EM " + rodadas + " RODADAS!");
         }
-        else if (jogador1.getQtdCartas() == 0 )
-        {
-            Debug.Log("MÁQUINA 2 VENCEU O JOGO EM " + rodadas + " RODADAS!");
-        }
-        else
-        {
-            Debug.Log("JOGO PARADO POIS ATINGIMOS " + rodadas + " RODADAS");
-        }
+        Debug.Log("Máquina 2 finalizou sua jogada");
+        maquina2.printarBaralho("máquina 2");
 
-        return rodadas;
+
+
+    } while (maquina1.getQtdCartas() > 0 & jogador1.getQtdCartas() > 0 & rodadas < qtdMaxRodadas);
+
+    if (maquina1.getQtdCartas() == 0 )
+    {
+        Debug.Log("MÁQUINA 1 VENCEU O JOGO EM " + rodadas + " RODADAS!");
+    }
+    else if (jogador1.getQtdCartas() == 0 )
+    {
+        Debug.Log("MÁQUINA 2 VENCEU O JOGO EM " + rodadas + " RODADAS!");
+    }
+    else
+    {
+        Debug.Log("JOGO PARADO POIS ATINGIMOS " + rodadas + " RODADAS");
+    }
+
+    return rodadas;
+
+    */
+
+        return 0;
     }
 }
