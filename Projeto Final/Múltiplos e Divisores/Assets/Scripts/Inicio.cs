@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Classe responsável pela tela de início do jogo
+/// </summary>
 public class Inicio : MonoBehaviour
-{    
+{
+    /* método para iniciar a tela de seleção do modo de jogo (fácil ou difícil) */
     public void startGame()
-    {
-        /* metodo para iniciar a tela do jogo propriamente dito */
+    {   
         SceneManager.LoadScene("Dificuldade");
     }
 
+    /* método para ir para a tela de regras */
     public void goToRegras()
     {
-        /* metodo para ir para a tela de regras */
         SceneManager.LoadScene("Regras");
     }
 }

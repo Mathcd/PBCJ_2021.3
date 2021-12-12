@@ -2,19 +2,30 @@ using Random = System.Random;
 using UnityEngine;
 using System.Collections.Generic;
 
+/* Este arquivo contém as classes que implementam o back-end do jogo
+ * Para referência auxiliar, consulte o arquivo "Classe UML.pdf" na 
+ * pasta raiz do projeto para consultar o diagrama de classes UML
+ * deste projeto*/
+
 namespace GameBackend
 {
+    /// <summary>
+    /// Classe definindo os valores de constantes que serão utilizadas pelo back-end do jogo
+    /// </summary>
     public static class Globals
     {
         public static int QTD_CARTAS_AO_CRIAR_BARALHO = 5;
         public static int QTD_MAX_CARTAS_MAO = 15;
-        public static char[] TIPOS_DISPONIVEIS = new char[] {'M', 'D', 'A', 'A'};
+        public static char[] TIPOS_DISPONIVEIS = new char[] {'M', 'D', 'A', 'A'}; // 25% de chance de cartas M ou D e 50% de cartas ambos (MD)
         public static int[] MULTIPLOS_DISPONIVEIS = new int[] {1, 2, 3, 4, 5, 6, 8, 9, 10};
         public static int[] DIVISORES_DISPONIVEIS = new int[] {6, 8, 9, 10, 12, 15, 16, 18, 20, 24};
         public static int[] AMBOS_DISPONIVEIS = new int[] {6, 8, 10};
         public static Random RANDOM = new Random();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class Carta
     {
         private int valor;
