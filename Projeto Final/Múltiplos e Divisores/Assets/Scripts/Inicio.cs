@@ -8,7 +8,7 @@ public class Inicio : MonoBehaviour
     public void startGame()
     {
         /* metodo para iniciar a tela do jogo propriamente dito */
-        SceneManager.LoadScene("dev_front");
+        SceneManager.LoadScene("Dificuldade");
     }
 
     public void goToRegras()

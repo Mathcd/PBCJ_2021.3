@@ -47,7 +47,7 @@ public class ManageCartas : MonoBehaviour
         float fatorEscalaY = (936 * escalaCartaOriginal) / 100.0f;
 
         Vector3 novaPosicao = new Vector3(centro.transform.position.x + ((1.15f*coluna + 1.5f) * fatorEscalaX), 
-                                          centro.transform.position.y + ((1.15f*linha - 1.5f) * fatorEscalaY), 
+                                          centro.transform.position.y + ((1.15f*linha - 1.95f) * fatorEscalaY), 
                                           centro.transform.position.z);
 
         
@@ -61,8 +61,27 @@ public class ManageCartas : MonoBehaviour
         
         nomeDaCarta = tipoCarta + "-" + valorCarta;
 
-        Sprite s1 = (Sprite)(Resources.Load<Sprite>(nomeDaCarta));
-        GameObject.Find("Carta_" + player + "_" + posicao).GetComponent<Tile>().setCartaOriginal(s1);
+        if (PlayerPrefs.GetInt("modoJogo") == 0)
+        {
+            Sprite s1 = (Sprite)(Resources.Load<Sprite>(nomeDaCarta));
+            GameObject.Find("Carta_" + player + "_" + posicao).GetComponent<Tile>().setCartaOriginal(s1);
+        }
+        else
+        {
+            if(player == 'M')
+            {
+                Sprite s1 = (Sprite)(Resources.Load<Sprite>("verso"));
+                GameObject.Find("Carta_" + player + "_" + posicao).GetComponent<Tile>().setCartaOriginal(s1);
+            }
+            else
+            {
+                Sprite s1 = (Sprite)(Resources.Load<Sprite>(nomeDaCarta));
+                GameObject.Find("Carta_" + player + "_" + posicao).GetComponent<Tile>().setCartaOriginal(s1);
+            }
+        }
+
+        
+        
     }
 
     public void MostraPilhaCompra()
@@ -73,8 +92,8 @@ public class ManageCartas : MonoBehaviour
         float fatorEscalaX = (662 * escalaCartaOriginal) / 100.0f;
         float fatorEscalaY = (936 * escalaCartaOriginal) / 100.0f;
 
-        Vector3 novaPosicao = new Vector3(centro.transform.position.x, 
-                                          centro.transform.position.y + (1.2f * fatorEscalaY), 
+        Vector3 novaPosicao = new Vector3(centro.transform.position.x + 4.46f, 
+                                          centro.transform.position.y + (1.2f * fatorEscalaY + 1.2f), 
                                           centro.transform.position.z);
 
         
@@ -98,8 +117,8 @@ public class ManageCartas : MonoBehaviour
         float fatorEscalaX = (662 * escalaCartaOriginal) / 100.0f;
         float fatorEscalaY = (936 * escalaCartaOriginal) / 100.0f;
 
-        Vector3 novaPosicao = new Vector3(centro.transform.position.x,
-                                          centro.transform.position.y + (0 * fatorEscalaY),
+        Vector3 novaPosicao = new Vector3(centro.transform.position.x + 0.46f,
+                                          centro.transform.position.y + (0 * fatorEscalaY - 0.25f),
                                           centro.transform.position.z);
 
 
@@ -113,5 +132,40 @@ public class ManageCartas : MonoBehaviour
         GameObject.Find("Carta_TopoPilhaDescarte").GetComponent<Tile>().setCartaOriginal(s1);
     }
 
-    
+
+    public bool VerificaCartaCompativel(int cartaAnteriorValor, char cartaAnteriorTipo, int cartaAtualValor)
+    {
+        print(">>>>>>>>>>>>>>>>>>>>>>>>> CASE <<<<<<<<<<<<< : " + cartaAnteriorTipo);
+        switch (cartaAnteriorTipo)
+        {
+            case 'M':
+                print(" -------------------  ENTREI NO M");
+                print("CASE M | pilha: " + cartaAnteriorValor + " mão " + cartaAtualValor);
+                if (cartaAtualValor % cartaAnteriorValor == 0)
+                {
+
+                    return true;
+                }
+                break;
+            case 'D':
+                print(" -------------------  ENTREI NO D");
+                print("CASE D | pilha: " + cartaAnteriorValor + " mão " + cartaAtualValor);
+                if (cartaAnteriorValor % cartaAtualValor == 0)
+                {
+
+                    return true;
+                }
+                break;
+            case 'A':
+                print(" -------------------  ENTREI NO A");
+                print("CASE A | pilha: " + cartaAnteriorValor + " mão " + cartaAtualValor);
+                if (cartaAnteriorValor % cartaAtualValor == 0 | cartaAtualValor % cartaAnteriorValor == 0)
+                {
+
+                    return true;
+                }
+                break;
+        }
+        return false;
+    }
 }

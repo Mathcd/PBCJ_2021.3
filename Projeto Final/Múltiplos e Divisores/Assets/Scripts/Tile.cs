@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GameBackend;
+using UnityEngine.UI;
 
 public class Tile : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class Tile : MonoBehaviour
     public Sprite originalCarta;
     public Sprite backCarta;
 
-    public ManagePlayer managePlayerScript;
+    public ManageCartas manageCartasScript;
     public Main mainScript;
 
 
@@ -18,7 +19,7 @@ public class Tile : MonoBehaviour
     {
         RevelaCarta();
 
-        managePlayerScript = new ManagePlayer();
+        manageCartasScript = new ManageCartas();
         mainScript = new Main();
     }
 
@@ -26,6 +27,20 @@ public class Tile : MonoBehaviour
     void Update()
     {
         RevelaCarta();
+    }
+
+    public void ButtonInteract()
+    {
+        if(PlayerPrefs.GetInt("jogadorJaComprou") == 0)
+        {
+            Debug.Log("Jogador deve comprar uma carta antes de poder passar a vez");
+            GameObject.Find("Comentario").GetComponent<Text>().text = "Você deve comprar uma carta antes de poder passar a vez";
+        }
+        else
+        {
+            PlayerPrefs.SetInt("jogadorJaComprou", 0);
+            PlayerPrefs.SetInt("vezDoJogador", 0);
+        }
     }
 
     /* essa função é executada sempre que houver clique do mouse */
@@ -41,15 +56,17 @@ public class Tile : MonoBehaviour
         var tokens = clicked_obj.Split('_');
 
         // se clicar na pilha de compra, compra carta
-        if (clicked_obj.Equals("Carta_TopoPilhaCompra") && Globals.JOGADOR_PODE_COMPRAR)
+        if (clicked_obj.Equals("Carta_TopoPilhaCompra"))
         {
-            if (!Globals.JOGADOR_PODE_COMPRAR)
+            if (PlayerPrefs.GetInt("jogadorJaComprou") == 0)
             {
-                Debug.Log("Jogador acabou de comprar e deve jogar a carta comprada");
+                // dispara compra
+                PlayerPrefs.SetInt("triggerCompra", 1);
             }
             else
             {
-                //// FUNÇÃO COMPRA CARTA
+                Debug.Log("Você já comprou nesta rodada. Caso não possua a carta compatível, passe a vez");
+                GameObject.Find("Comentario").GetComponent<Text>().text = "Você já comprou nesta rodada. Caso não possua a carta compatível, passe a vez";
             }
 
         }
@@ -69,8 +86,9 @@ public class Tile : MonoBehaviour
                 Debug.Log("Esse eh o valor da carta atual: " + cartaAtualValor);
                 Debug.Log("Essa eh a posicão da carta atual: " + posicaoCartaAtual);
 
-                if(managePlayerScript.VerificaCartaCompativel(cartaAnteriorValor, cartaAnteriorTipo, cartaAtualValor)){
-                    Debug.Log("Essa carta é COMPATÍVEL");
+                if(manageCartasScript.VerificaCartaCompativel(cartaAnteriorValor, cartaAnteriorTipo, cartaAtualValor)){
+                    Debug.Log("Essa carta[" + cartaAtualValor + "]é COMPATÍVEL. Ela será jogada");
+                    PlayerPrefs.SetInt("cartaDescartada", posicaoCartaAtual);
                 }
                 //// VERIFICA SE A CARTA EH COMPATIVEL;
                 //// SE FOR, JOGA CARTA

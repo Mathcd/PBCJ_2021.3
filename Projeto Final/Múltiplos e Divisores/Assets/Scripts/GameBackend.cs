@@ -13,9 +13,6 @@ namespace GameBackend
         public static int[] DIVISORES_DISPONIVEIS = new int[] {6, 8, 9, 10, 12, 15, 16, 18, 20, 24};
         public static int[] AMBOS_DISPONIVEIS = new int[] {6, 8, 10};
         public static Random RANDOM = new Random();
-
-        // define se o jogador pode ou não comprar
-        public static bool JOGADOR_PODE_COMPRAR = true;
     }
 
     public class Carta

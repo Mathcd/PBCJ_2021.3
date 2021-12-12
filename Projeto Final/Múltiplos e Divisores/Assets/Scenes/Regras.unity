@@ -946,8 +946,8 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: "\nO Jogo \xE9 formado por cartas numeradas divididas em tr\xEAs grupos:
     carta m\xFAltiplo (M); carta divisor (D); carta m\xFAltiplo-divisor (MD).\r\n\r\nPrimeiramente,
-    todas as cartas s\xE3o embaralhadas. Em seguida, distribuem-se 10 cartas para
-    o jogador e 10 para a m\xE1quina e as que sobrarem s\xE3o colocadas para montar
+    todas as cartas s\xE3o embaralhadas. Em seguida, distribuem-se 5 cartas para
+    o jogador e 5 para a m\xE1quina e as que sobrarem s\xE3o colocadas para montar
     a pilha de compra. Na sequ\xEAncia, seleciona-se uma carta da pilha de compra
     para ser a carta inicial da partida, formando a primeira carta da pilha de descarte.\r\n\r\nEm
     cada rodada, o jogador dever\xE1 descartar uma das cartas em suas m\xE3os que

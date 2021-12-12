@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GameBackend;
-using System; 
+using System;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Main : MonoBehaviour
 {
 
     public ManageCartas manageCartasScript; // cria objeto manageCartasScript da classe ManageCartas
+    
 
     // Criando um baralho para a máquina 1
     Maquina maquina1;
@@ -17,6 +20,7 @@ public class Main : MonoBehaviour
     //maquina1.printarBaralho("máquina 1");
 
     int indexCarta;
+    int numeroCarta;
     int rodadas = 0;
     bool vezDoJogador = true;
 
@@ -25,6 +29,7 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         // criando variáveis para cada uma das cartas do jogador
         PlayerPrefs.SetInt("carta0jogador", -1);
         PlayerPrefs.SetInt("carta1jogador", -1);
@@ -43,7 +48,17 @@ public class Main : MonoBehaviour
         PlayerPrefs.SetInt("carta14jogador", -1);
 
         // flag da vez do jogador; se 0 : não é a vez, se 1 : não é a vez
-        PlayerPrefs.SetInt("vezDoJogador", 0);
+        PlayerPrefs.SetInt("vezDoJogador", 1);
+
+        GameObject.Find("Comentario").GetComponent<Text>().text = "Faça a primeira jogada! Suas cartas são as da direita";
+
+        // variável com a carta que o jogador escolheu para descartar
+        PlayerPrefs.SetInt("cartaDescartada", -1);
+
+        PlayerPrefs.SetInt("jogadorJaComprou", 0);
+        PlayerPrefs.SetInt("triggerCompra", 0);
+
+        
 
         // Criando um baralho para a pilha de compra
         pilha = new PilhaCompra();
@@ -85,12 +100,72 @@ public class Main : MonoBehaviour
 
 
 
-        // Update is called once per frame
+    // Update is called once per frame
     void Update()
     {
-        if (vezDoJogador)
+        if (maquina1.getQtdCartas() == 0)
         {
-            int abc = 1;
+            SceneManager.LoadScene("FimDerrota");
+        }
+        else if (jogador1.getQtdCartas() == 0)
+        {
+            SceneManager.LoadScene("Fim");
+        }
+
+        else if (PlayerPrefs.GetInt("vezDoJogador") == 1) { 
+
+
+
+            if (PlayerPrefs.GetInt("triggerCompra") == 1)
+            {
+                Debug.Log("Jogador 1 não encontrou carta compatível e está comprando uma carta da pilha.");
+                Carta novaCarta = pilha.comprarCarta();
+                jogador1.adicionarCartaComprada(novaCarta);
+
+                AtualizaTodasCartas(jogador1);
+
+                PlayerPrefs.SetInt("triggerCompra", 0);
+                PlayerPrefs.SetInt("jogadorJaComprou", 1);
+            }
+
+            // caso cartaDescartada seja != -1, significa que alguma carta foi jogada
+            else if (PlayerPrefs.GetInt("cartaDescartada") != -1)
+            {
+                indexCarta = PlayerPrefs.GetInt("cartaDescartada");
+
+                Debug.Log("Entrei aqui no Update... CartaDescartada é: " + indexCarta);
+
+
+
+                cartaAnterior = jogador1.getCartaAt(indexCarta);
+                PlayerPrefs.SetInt("cartaAnteriorValorPP", cartaAnterior.getValor());
+                PlayerPrefs.SetString("cartaAnteriorTipoPP", cartaAnterior.getTipo().ToString());
+
+                Debug.Log("Os PlayerPrefs foram setados com sucesso");
+
+                Debug.Log("Pilha de descarte atualizada");
+                manageCartasScript.MostraPilhaDescarte(cartaAnterior.getTipo(), cartaAnterior.getValor());
+
+                jogador1.jogarCarta(indexCarta);
+                Debug.Log("Jogador1 jogou a carta");
+
+                AtualizaTodasCartas(jogador1);
+                Debug.Log("Atualizando as cartas do jogador1");
+
+
+                PlayerPrefs.SetInt("cartaDescartada", -1);
+                PlayerPrefs.SetInt("vezDoJogador", 1);
+                PlayerPrefs.SetInt("jogadorJaComprou", 0);
+
+
+                PlayerPrefs.SetInt("vezDoJogador", 0);
+
+            }
+
+            else
+            {
+                int i = 1;
+            }
         }
         else
         {
@@ -112,7 +187,11 @@ public class Main : MonoBehaviour
                 // Aqui achamos uma carta no baralho, vou jogar a carta encontrada
                 // e definir que agr a carta anterior eh a carta encontrada
                 Debug.Log("Máquina 1 encontrou carta no index " + indexCarta);
+
+                
                 cartaAnterior = maquina1.getCartaAt(indexCarta);
+                PlayerPrefs.SetInt("cartaAnteriorValorPP", cartaAnterior.getValor());
+                PlayerPrefs.SetString("cartaAnteriorTipoPP", cartaAnterior.getTipo().ToString());
                 maquina1.jogarCarta(indexCarta);
 
 
@@ -124,6 +203,8 @@ public class Main : MonoBehaviour
 
                 Debug.Log("E assim ficou o baralho da maquina:");
                 maquina1.printarBaralho("máquina 1");
+
+                GameObject.Find("Comentario").GetComponent<Text>().text = "Máquina acabou de jogar. Agora é a sua vez";
             }
 
             // Se nao encontrou, compra
@@ -144,6 +225,10 @@ public class Main : MonoBehaviour
                     // e definir que agr a carta anterior eh a carta encontrada
                     Debug.Log("Máquina 1 encontrou carta no index " + indexCarta);
                     cartaAnterior = maquina1.getCartaAt(indexCarta);
+
+                    PlayerPrefs.SetInt("cartaAnteriorValorPP", cartaAnterior.getValor());
+                    PlayerPrefs.SetString("cartaAnteriorTipoPP", cartaAnterior.getTipo().ToString());
+
                     maquina1.jogarCarta(indexCarta);
 
                     // atualizamos a pilha de descarte com a carta jogada
@@ -155,9 +240,13 @@ public class Main : MonoBehaviour
 
                 Debug.Log("E assim ficou o baralho da maquina:");
                 maquina1.printarBaralho("máquina 1");
+
+                GameObject.Find("Comentario").GetComponent<Text>().text = "A Máquina já foi. Agora é a sua vez";
             }
             AtualizaTodasCartas(maquina1);
-            vezDoJogador = true;
+
+
+            PlayerPrefs.SetInt("vezDoJogador", 1);
 
         }
     }
@@ -220,8 +309,17 @@ public class Main : MonoBehaviour
             Carta cartaAtual = maquina1.getCartaAt(i);
             string nomeCartaAtual = "" + cartaAtual.getTipo() + "-" + cartaAtual.getValor();
 
-            Sprite s1 = (Sprite)(Resources.Load<Sprite>(nomeCartaAtual));
-            GameObject.Find("Carta_" + "M" + "_" + i).GetComponent<Tile>().setCartaOriginal(s1);
+            if (PlayerPrefs.GetInt("modoJogo") == 0)
+            {
+                Sprite s1 = (Sprite)(Resources.Load<Sprite>(nomeCartaAtual));
+                GameObject.Find("Carta_" + "M" + "_" + i).GetComponent<Tile>().setCartaOriginal(s1);
+            }
+            else
+            {
+                Sprite s1 = (Sprite)(Resources.Load<Sprite>("verso"));
+                GameObject.Find("Carta_" + "M" + "_" + i).GetComponent<Tile>().setCartaOriginal(s1);
+            }
+            
         }
         // preenche as posições vazias com a carta "blank"
         for (int i = qtdCartas; i<15; i++)
