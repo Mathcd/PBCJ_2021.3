@@ -20,13 +20,7 @@ public class ManageCartas : MonoBehaviour
         
     }
 
-    /*
-    public void MostraCartas(char player, int posicao, char tipoCarta, int valorCarta)
-    {
-        AddUmaCarta(player, posicao, tipoCarta, valorCarta);
-    }*/
-
-
+    
     public void AddUmaCarta(char player, int posicao, char tipoCarta, int valorCarta)
     {
         //Debug.Log(codCarta);
@@ -135,12 +129,9 @@ public class ManageCartas : MonoBehaviour
 
     public bool VerificaCartaCompativel(int cartaAnteriorValor, char cartaAnteriorTipo, int cartaAtualValor)
     {
-        print(">>>>>>>>>>>>>>>>>>>>>>>>> CASE <<<<<<<<<<<<< : " + cartaAnteriorTipo);
         switch (cartaAnteriorTipo)
         {
             case 'M':
-                print(" -------------------  ENTREI NO M");
-                print("CASE M | pilha: " + cartaAnteriorValor + " mão " + cartaAtualValor);
                 if (cartaAtualValor % cartaAnteriorValor == 0)
                 {
 
@@ -148,8 +139,6 @@ public class ManageCartas : MonoBehaviour
                 }
                 break;
             case 'D':
-                print(" -------------------  ENTREI NO D");
-                print("CASE D | pilha: " + cartaAnteriorValor + " mão " + cartaAtualValor);
                 if (cartaAnteriorValor % cartaAtualValor == 0)
                 {
 
@@ -157,8 +146,6 @@ public class ManageCartas : MonoBehaviour
                 }
                 break;
             case 'A':
-                print(" -------------------  ENTREI NO A");
-                print("CASE A | pilha: " + cartaAnteriorValor + " mão " + cartaAtualValor);
                 if (cartaAnteriorValor % cartaAtualValor == 0 | cartaAtualValor % cartaAnteriorValor == 0)
                 {
 
